@@ -21,17 +21,20 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
+// Trust Render's reverse proxy for HTTPS
+app.set("trust proxy", 1);
+
 // MongoDB URL
 const dbUrl = process.env.ATLASDB_URL;
 
 // Check environment variables
 if (!dbUrl) {
-    console.error("ERROR: ATLASDB_URL is missing in .env file");
+    console.error("ERROR: ATLASDB_URL is missing");
     process.exit(1);
 }
 
 if (!process.env.SECRET) {
-    console.error("ERROR: SECRET is missing in .env file");
+    console.error("ERROR: SECRET is missing");
     process.exit(1);
 }
 
@@ -67,7 +70,8 @@ const sessionOptions = {
     cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        // secure: true, // Enable HTTPS in production
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
     },
 };
 
@@ -130,4 +134,5 @@ async function main() {
 
 main().catch((err) => {
     console.error("MongoDB connection error:", err);
+    process.exit(1);
 });
