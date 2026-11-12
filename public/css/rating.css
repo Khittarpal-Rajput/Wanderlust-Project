@@ -1,0 +1,53 @@
+/* STAR RATING INPUT */
+.custom-star-rating {
+    display: inline-flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: flex-end;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.custom-star-rating input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.custom-star-rating label {
+    display: inline-block;
+    font-size: 42px !important;
+    color: #cccccc !important;
+    cursor: pointer;
+    padding: 0 3px;
+    line-height: 1;
+}
+
+/* Selected stars */
+.custom-star-rating input:checked ~ label {
+    color: #ffc107 !important;
+}
+
+/* Hover effect */
+.custom-star-rating label:hover,
+.custom-star-rating label:hover ~ label {
+    color: #ffc107 !important;
+}
+
+/* REVIEW DISPLAY */
+.review-stars {
+    font-size: 25px;
+    letter-spacing: 3px;
+    margin: 8px 0;
+}
+
+.review-stars span.filled {
+    color: #ffc107 !important;
+    -webkit-text-fill-color: #ffc107 !important;
+}
+
+.review-stars span.empty {
+    color: #cccccc !important;
+    -webkit-text-fill-color: #cccccc !important;
+}

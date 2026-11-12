@@ -1,0 +1,615 @@
+
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  /* ================================
+     CATEGORY TOOLBAR
+  ================================= */
+
+  .wanderlust-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.2rem 0 0.5rem;
+  }
+
+  #filters {
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  #filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter {
+    min-width: max-content;
+    text-align: center;
+    opacity: 0.65;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+  }
+
+  .filter:hover {
+    opacity: 1;
+    border-bottom-color: #fe424d;
+  }
+
+  .filter i {
+    font-size: 1.25rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .filter p {
+    font-size: 0.78rem;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  /* ================================
+     TAX TOGGLE
+  ================================= */
+
+  .tax-toggle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border: 1px solid #dedede;
+    border-radius: 0.8rem;
+    background: #fff;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  .tax-toggle .form-check {
+    margin: 0;
+    min-height: auto;
+  }
+
+  .tax-toggle .form-check-input {
+    cursor: pointer;
+    margin-top: 0;
+  }
+
+  .tax-toggle .form-check-label {
+    cursor: pointer;
+  }
+
+  /* ================================
+     WANDERLUST EXPLORE MAP BANNER
+  ================================= */
+
+  .wanderlust-map-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 220px;
+    padding: 2rem 2.5rem;
+    margin: 1.5rem 0 1.8rem;
+    overflow: hidden;
+    border-radius: 20px;
+    background: linear-gradient(110deg, #fff1ed 0%, #fff7f2 48%, #f1f7ff 100%);
+    border: 1px solid #f4e5df;
+    transition: all 0.3s ease;
+  }
+
+  .wanderlust-map-banner:hover {
+    box-shadow: 0 12px 30px rgba(40, 40, 40, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .map-banner-content {
+    position: relative;
+    z-index: 2;
+    max-width: 480px;
+  }
+
+  .map-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #fe424d;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .map-banner-content h2 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 750;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .map-banner-content p {
+    font-size: 0.95rem;
+    color: #717171;
+    line-height: 1.7;
+    margin-bottom: 1.3rem;
+  }
+
+  .wanderlust-map-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 21px;
+    background: #222;
+    color: #fff;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+
+  .wanderlust-map-btn:hover {
+    background: #fe424d;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(254, 66, 77, 0.2);
+  }
+
+  .map-banner-visual {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 42%;
+    height: 175px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .map-art {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    height: 175px;
+    overflow: hidden;
+    border-radius: 16px;
+    background:
+      linear-gradient(35deg, transparent 47%, rgba(255,255,255,.8) 48%, rgba(255,255,255,.8) 50%, transparent 51%),
+      linear-gradient(125deg, transparent 35%, rgba(255,255,255,.8) 36%, rgba(255,255,255,.8) 38%, transparent 39%),
+      #dcece4;
+    box-shadow: 0 8px 24px rgba(0,0,0,.10);
+    transform: rotate(-2deg);
+  }
+
+  .map-art::before,
+  .map-art::after {
+    content: "";
+    position: absolute;
+    width: 130%;
+    height: 12px;
+    left: -15%;
+    background: rgba(255,255,255,.85);
+    border-radius: 50%;
+    transform: rotate(-24deg);
+  }
+
+  .map-art::before {
+    top: 38%;
+  }
+
+  .map-art::after {
+    top: 72%;
+    transform: rotate(18deg);
+  }
+
+  .map-road {
+    position: absolute;
+    width: 150%;
+    height: 7px;
+    top: 55%;
+    left: -20%;
+    background: #f4d6a4;
+    transform: rotate(15deg);
+    border: 2px solid rgba(255,255,255,.8);
+  }
+
+  .map-location {
+    position: absolute;
+    z-index: 3;
+    color: #fe424d;
+    font-size: 2.1rem;
+    filter: drop-shadow(0 3px 3px rgba(0,0,0,.2));
+  }
+
+  .map-location.location-one {
+    top: 22%;
+    left: 28%;
+  }
+
+  .map-location.location-two {
+    top: 46%;
+    right: 22%;
+    font-size: 1.7rem;
+  }
+
+  .map-location.location-three {
+    bottom: 8%;
+    left: 55%;
+    font-size: 1.5rem;
+  }
+
+  .map-map-label {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    z-index: 4;
+    background: rgba(255,255,255,.9);
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: #555;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  /* ================================
+     LISTINGS
+  ================================= */
+
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .listing-card {
+    border: none;
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+  }
+
+  .listing-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .listing-card img {
+    width: 100%;
+    height: 20rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .listing-card:hover img {
+    transform: scale(1.02);
+  }
+
+  .listing-card .card-body {
+    padding: 0.8rem 0.2rem;
+  }
+
+  .listing-card .card-text {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .tax-info {
+    display: none;
+    color: #717171;
+    font-size: 0.85rem;
+  }
+
+  /* ================================
+     RESPONSIVE
+  ================================= */
+
+  @media (max-width: 768px) {
+    .wanderlust-toolbar {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    #filters {
+      flex-basis: 100%;
+      order: 1;
+      gap: 1.5rem;
+    }
+
+    .tax-toggle {
+      order: 2;
+      margin-left: auto;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.78rem;
+    }
+
+    .wanderlust-map-banner {
+      padding: 1.5rem;
+      gap: 1rem;
+    }
+
+    .map-banner-visual {
+      flex-basis: 40%;
+    }
+
+    .listing-card img {
+      height: 17rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .wanderlust-map-banner {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 1.4rem;
+      gap: 1.3rem;
+      margin-top: 1.2rem;
+    }
+
+    .map-banner-content {
+      max-width: 100%;
+    }
+
+    .map-banner-content h2 {
+      font-size: 1.55rem;
+    }
+
+    .map-banner-content p {
+      font-size: 0.85rem;
+    }
+
+    .wanderlust-map-btn {
+      width: 100%;
+    }
+
+    .map-banner-visual {
+      flex: auto;
+      width: 100%;
+      height: 145px;
+    }
+
+    .map-art {
+      height: 145px;
+      transform: none;
+    }
+
+    .listing-card img {
+      height: 17rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .tax-toggle {
+      font-size: 0.72rem;
+    }
+
+    .listing-card img {
+      height: 15rem;
+    }
+  }
+</style>
+
+
+<div class="container">
+
+  <!-- CATEGORY FILTERS + TAX TOGGLE -->
+
+  <div class="wanderlust-toolbar">
+
+    <div id="filters">
+
+      <div class="filter">
+        <div><i class="fa-solid fa-fire"></i></div>
+        <p>Trending</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-bed"></i></div>
+        <p>Rooms</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-mountain-city"></i></div>
+        <p>Iconic Cities</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-mountain"></i></div>
+        <p>Mountains</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-brands fa-fort-awesome"></i></div>
+        <p>Castles</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-person-swimming"></i></div>
+        <p>Amazing Pools</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-campground"></i></div>
+        <p>Camping</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-tractor"></i></div>
+        <p>Farms</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-snowflake"></i></div>
+        <p>Arctic</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-igloo"></i></div>
+        <p>Domes</p>
+      </div>
+
+      <div class="filter">
+        <div><i class="fa-solid fa-sailboat"></i></div>
+        <p>Boats</p>
+      </div>
+
+    </div>
+
+    <!-- TAX SWITCH -->
+
+    <div class="tax-toggle">
+      <div class="form-check form-switch">
+
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="switchCheckDefault"
+        >
+
+        <label
+          class="form-check-label"
+          for="switchCheckDefault"
+        >
+          Display total after taxes
+        </label>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- WANDERLUST EXPLORE MAP BANNER -->
+
+  <section class="wanderlust-map-banner">
+
+    <div class="map-banner-content">
+
+      <div class="map-eyebrow">
+        <i class="fa-solid fa-compass"></i>
+        EXPLORE WANDERLUST
+      </div>
+
+      <h2>Discover stays around the world.</h2>
+
+      <p>
+        Explore amazing destinations, find beautiful stays
+        and choose your next unforgettable experience.
+      </p>
+
+      <a href="/listings/map" class="wanderlust-map-btn">
+        <i class="fa-solid fa-map-location-dot"></i>
+        Explore Map
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+
+    </div>
+
+    <!-- Decorative map illustration -->
+
+    <div class="map-banner-visual">
+
+      <div class="map-art">
+
+        <div class="map-road"></div>
+
+        <div class="map-location location-one">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+
+        <div class="map-location location-two">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+
+        <div class="map-location location-three">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+
+        <div class="map-map-label">
+          <i class="fa-solid fa-compass"></i>
+          Find your destination
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ALL LISTINGS -->
+
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+
+    <% for (let listing of allListings) { %>
+
+      <a
+        href="/listings/<%= listing._id %>"
+        class="col listing-link"
+      >
+
+        <div class="card listing-card">
+
+          <img
+            src="<%= listing.image?.url || listing.image || '' %>"
+            class="card-img-top"
+            alt="<%= listing.title %>"
+            loading="lazy"
+          >
+
+          <div class="card-body">
+
+            <p class="card-text">
+
+              <b><%= listing.title %></b>
+
+              <br>
+
+              ₹ <%= Number(listing.price || 0).toLocaleString("en-IN") %> / night
+
+              <i class="tax-info">
+                &nbsp; +18% GST
+              </i>
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </a>
+
+    <% } %>
+
+  </div>
+
+</div>
+
+
+<!-- TAX TOGGLE JAVASCRIPT -->
+
+<script>
+  const taxSwitch = document.getElementById("switchCheckDefault");
+
+  if (taxSwitch) {
+    taxSwitch.addEventListener("change", () => {
+
+      const taxInfo = document.querySelectorAll(".tax-info");
+
+      taxInfo.forEach((info) => {
+        info.style.display = taxSwitch.checked
+          ? "inline"
+          : "none";
+      });
+
+    });
+  }
+</script>
